@@ -12,6 +12,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openApi/v1.json", "Card Registry");
+    });
 }
 
 app.UseHttpsRedirection();
