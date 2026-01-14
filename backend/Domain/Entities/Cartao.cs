@@ -22,4 +22,5 @@ public class Cartao
     public DateTime? DataLote { get; set; }
     public required string OrigemCadastro { get; set; }
     public DateTime CriadoEm { get; set; } = DateTime.Now;
+    public required Guid UsuarioId { get; set; }
 }
