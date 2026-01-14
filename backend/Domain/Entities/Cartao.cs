@@ -14,7 +14,7 @@ public class Cartao
     [MaxLength(1)]
     public string? IdentificadorLinha { get; set; }
 
-    public int? SequenciaLote { get; set; }
+    public string? SequenciaLote { get; set; }
 
     [MaxLength(8)]
     public string? CodigoLote { get; set; }
