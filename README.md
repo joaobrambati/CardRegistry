@@ -17,36 +17,36 @@ O Card Registry API é uma API simples, mas segura. Ela permite:
 
 * O foco principal do projeto foi a segurança, garantindo que dados sensíveis como números de cartão e senhas fossem armazenados de forma segura.
 
---
-# Tecnologias utilizadas
+---
+## Tecnologias utilizadas
 
-Linguagem: C#
+* Linguagem: C#
 
-Framework: .NET 9
+* Framework: .NET 9
 
-Banco de dados: SQL Server (Docker)
+* Banco de dados: SQL Server (Docker)
 
-ORM: Entity Framework Core
+* ORM: Entity Framework Core
 
-Autenticação: JWT
+* Autenticação: JWT
 
-Logs: Serilog
+* Logs: Serilog
 
-Arquitetura: DDD (Domain-Driven Design)
+* Arquitetura: DDD (Domain-Driven Design)
 
-Testes: Xunit
+* Testes: Xunit
 
-Hash de cartões: PBKDF2 + SHA256
+* Hash de cartões: PBKDF2 + SHA256
 
---
-# Endpoints principais
+---
+## Endpoints principais
 
-Usuario
+* Usuario
 POST /api/auth/register → Cadastro de usuário
 POST /api/auth/login → Login e geração de token JWT
 
-Cartao
-* Todos os endpoints abaixo exigem autenticação JWT no header:
+* Cartao
+Todos os endpoints abaixo exigem autenticação JWT no header:
 GET /api/cartao/obterPorNumero/{cardNumber} → Consulta um cartão pelo número completo
 POST /api/cartao/cadastraManual → Cadastra um cartão manualmente
 POST /api/cartao/cadastraArquivo → Cadastra cartões a partir de um arquivo TXT
