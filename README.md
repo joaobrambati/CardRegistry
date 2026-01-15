@@ -89,3 +89,5 @@ Testes unitários foram feitos usando Xunit.
 * Usei mapeamento manual entre entidades e DTOs por ser mais rápido e performático.
 
 * Optei por utilizar Repositórios e Services com Interfaces para separar responsabilidades, facilitar a manutenção, permitir a troca de implementações sem impactar o restante do sistema.
+
+* Utilizei padrões de commit como (fix, feat, refactor, test e chore)
