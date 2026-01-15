@@ -39,7 +39,7 @@ public class CartaoService : ICartaoService
 
             return new Response<ConsultarCartaoDto> { Data = cartaoMapeado, Status = true, Mensagem = "Cartão exibido com sucesso." };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return new Response<ConsultarCartaoDto> { Status = false, Mensagem = ex.Message };
         }
@@ -63,7 +63,7 @@ public class CartaoService : ICartaoService
                 UltimosQuatroDigitos = numCartao.Length >= 4 ? numCartao[^4..] : numCartao,
                 OrigemCadastro = "Manual",
                 CriadoEm = DateTime.Now,
-                UsuarioId = usuarioId                
+                UsuarioId = usuarioId
             };
 
             await _repository.Create(cartao);
@@ -86,7 +86,7 @@ public class CartaoService : ICartaoService
             return new Response<CartaoDto> { Data = cartaoDto, Status = true, Mensagem = "Cartão cadastrado com sucesso." };
 
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return new Response<CartaoDto> { Status = false, Mensagem = ex.Message };
         }
@@ -113,23 +113,31 @@ public class CartaoService : ICartaoService
                     linhas.Add(linha);
             }
 
-            // Primeira linha é header e última linha é o footer do lote
+            var count = 0;
+            var header = linhas[0];
+            var codigoLote = header.Substring(37, 8).Trim();
+            var dataLoteString = linhas[0].Substring(29, 8).Trim();
+            DateTime.TryParseExact(dataLoteString, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataLote);
+
             for (int i = 1; i < linhas.Count - 1; i++)
             {
-                var linha = linhas[i];
+                var linha = linhas[i].Trim();
 
-                var numeroCartao = linha.Substring(7, 19).Trim();
+                var partes = linha.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (partes.Length < 2)
+                    continue;
+
+                var identificadorLinha = partes[0][0].ToString();
+                var sequenciaLote = partes[0].Substring(1);
+                var numeroCartao = partes[1];
+
                 var hash = _hashService.GerarHash(numeroCartao);
 
                 var existe = await _repository.GetByCardNumberHash(hash);
                 if (existe is not null)
                     continue; // cartão ja existe, ignora
 
-                var identificadorLinha = linha.Substring(0, 1).Trim();
-                var sequenciaLote = linha.Substring(1, 6).Trim();
-                var codigoLote = linhas[0].Substring(36, 8).Trim();
-                var dataLoteString = linhas[0].Substring(29, 8).Trim(); 
-                DateTime.TryParseExact(dataLoteString, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dataLote);
+                count++;
 
                 var cartao = new Cartao
                 {
@@ -146,6 +154,7 @@ public class CartaoService : ICartaoService
                 };
 
                 await _repository.Create(cartao);
+                await _repository.SaveChangesAsync();
 
                 cartoesCriados.Add(new CartaoDto
                 {
@@ -162,9 +171,10 @@ public class CartaoService : ICartaoService
                 });
             }
 
-            await _repository.SaveChangesAsync();
+            if (count == 0)
+                return new Response<List<CartaoDto>> { Status = false, Mensagem = "Nenhum cartão foi cadastrado. Todos os cartões do arquivo já existem na base." };
 
-            return new Response<List<CartaoDto>> { Data = cartoesCriados, Status = true, Mensagem = "Cartões cadastrados a partir do arquivo com sucesso." };
+            return new Response<List<CartaoDto>> { Data = cartoesCriados, Status = true, Mensagem = $"{count} Cartões cadastrados a partir do arquivo com sucesso." };
         }
         catch (Exception ex)
         {
