@@ -87,3 +87,5 @@ Testes unitários foram feitos usando Xunit.
 * O JWT expira após 60 minutos e precisa ser enviado nos headers para qualquer operação de cartão.
 
 * Usei mapeamento manual entre entidades e DTOs por ser mais rápido e performático.
+
+* Optei por utilizar Repositórios e Services com Interfaces para separar responsabilidades, facilitar a manutenção, permitir a troca de implementações sem impactar o restante do sistema.
