@@ -43,12 +43,16 @@ O Card Registry API é uma API simples, mas segura. Ela permite:
 
 * Usuario
 POST /api/auth/register → Cadastro de usuário
+
 POST /api/auth/login → Login e geração de token JWT
 
 * Cartao
 Todos os endpoints abaixo exigem autenticação JWT no header:
+
 GET /api/cartao/obterPorNumero/{cardNumber} → Consulta um cartão pelo número completo
+
 POST /api/cartao/cadastraManual → Cadastra um cartão manualmente
+
 POST /api/cartao/cadastraArquivo → Cadastra cartões a partir de um arquivo TXT
 
 ---
