@@ -91,3 +91,6 @@ Testes unitários foram feitos usando Xunit.
 * Optei por utilizar Repositórios e Services com Interfaces para separar responsabilidades, facilitar a manutenção, permitir a troca de implementações sem impactar o restante do sistema.
 
 * Utilizei padrões de commit como (fix, feat, refactor, test e chore)
+
+---
+<img width="1691" height="212" alt="image" src="https://github.com/user-attachments/assets/e8b0b11c-40b2-45b0-a9e4-713a3df8156d" />
