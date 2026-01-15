@@ -6,6 +6,7 @@ using Domain.Services;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Services;
 
@@ -13,15 +14,19 @@ public class CartaoService : ICartaoService
 {
     private readonly ICartaoRepository _repository;
     private readonly IHashService _hashService;
+    private readonly ILogger<CartaoService> _logger;
 
-    public CartaoService(ICartaoRepository repository, IHashService hashService)
+    public CartaoService(ICartaoRepository repository, IHashService hashService, ILogger<CartaoService> logger)
     {
         _repository = repository;
         _hashService = hashService;
+        _logger = logger;
     }
 
     public async Task<Response<ConsultarCartaoDto>> GetByCardNumber(string cardNumber)
     {
+        _logger.LogInformation("GetByCardNumber chamado com numero {CardNumber}", cardNumber);
+
         try
         {
             var hash = _hashService.GerarHash(cardNumber.Trim());
@@ -29,7 +34,10 @@ public class CartaoService : ICartaoService
             var cartao = await _repository.GetByCardNumberHash(hash);
 
             if (cartao is null)
+            {
+                _logger.LogWarning("Cartão não encontrado para hash {Hash}", hash);
                 return new Response<ConsultarCartaoDto> { Status = false, Mensagem = "Não existe um cartão cadastrado com esse número." };
+            }
 
             var cartaoMapeado = new ConsultarCartaoDto
             {
@@ -37,16 +45,21 @@ public class CartaoService : ICartaoService
                 UltimosQuatroDigitos = cartao.UltimosQuatroDigitos
             };
 
+            _logger.LogInformation("Cartão encontrado: {CartaoId}", cartao.Id);
+
             return new Response<ConsultarCartaoDto> { Data = cartaoMapeado, Status = true, Mensagem = "Cartão exibido com sucesso." };
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Erro ao buscar cartão {CardNumber}", cardNumber);
             return new Response<ConsultarCartaoDto> { Status = false, Mensagem = ex.Message };
         }
     }
 
     public async Task<Response<CartaoDto>> Create(NumCartaoDto dto)
     {
+        _logger.LogInformation("Create chamado para cartão {CardNumber}", dto.NumeroCartao);
+
         try
         {
             var numCartao = dto.NumeroCartao.Trim();
@@ -54,7 +67,10 @@ public class CartaoService : ICartaoService
 
             var existe = await _repository.GetByCardNumberHash(hash);
             if (existe is not null)
+            {
+                _logger.LogWarning("Cartão já existe: {CardNumber}", numCartao);
                 return new Response<CartaoDto> { Status = false, Mensagem = "Cartão já cadastrado." };
+            }
 
             var cartao = new Cartao
             {
@@ -67,6 +83,8 @@ public class CartaoService : ICartaoService
 
             await _repository.Create(cartao);
             await _repository.SaveChangesAsync();
+
+            _logger.LogInformation("Cartão cadastrado com sucesso: {CartaoId}", cartao.Id);
 
             var cartaoDto = new CartaoDto
             {
@@ -86,18 +104,24 @@ public class CartaoService : ICartaoService
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Erro ao cadastrar cartão {CardNumber}", dto.NumeroCartao);
             return new Response<CartaoDto> { Status = false, Mensagem = ex.Message };
         }
     }
 
     public async Task<Response<List<CartaoDto>>> CreateFromFile(IFormFile arquivo)
     {
+        _logger.LogInformation("CreateFromFile chamado com arquivo {FileName}", arquivo?.FileName);
+
         var cartoesCriados = new List<CartaoDto>();
 
         try
         {
             if (arquivo is null || arquivo.Length == 0)
+            {
+                _logger.LogWarning("Arquivo inválido ou vazio");
                 return new Response<List<CartaoDto>> { Status = false, Mensagem = "Arquivo inválido." };
+            }
 
             using var stream = arquivo.OpenReadStream();
             using var reader = new StreamReader(stream);
@@ -168,12 +192,17 @@ public class CartaoService : ICartaoService
             }
 
             if (count == 0)
+            {
+                _logger.LogWarning("Nenhum cartão novo foi cadastrado a partir do arquivo {FileName}", arquivo.FileName);
                 return new Response<List<CartaoDto>> { Status = false, Mensagem = "Nenhum cartão foi cadastrado. Todos os cartões do arquivo já existem na base." };
+            }
 
+            _logger.LogInformation("{Count} cartões cadastrados a partir do arquivo {FileName}", count, arquivo.FileName);
             return new Response<List<CartaoDto>> { Data = cartoesCriados, Status = true, Mensagem = $"{count} Cartões cadastrados a partir do arquivo com sucesso." };
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Erro ao processar arquivo {FileName}", arquivo?.FileName);
             return new Response<List<CartaoDto>> { Status = false, Mensagem = ex.Message };
         }
     }
