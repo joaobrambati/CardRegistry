@@ -15,5 +15,4 @@ public class CartaoDto
     public string OrigemCadastro { get; set; } = null!;
 
     public DateTime CriadoEm { get; set; }
-    public Guid UsuarioId { get; set; }
 }
