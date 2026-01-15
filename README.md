@@ -1,8 +1,8 @@
-# Card Registry API
+## Card Registry API
 Uma API para cadastro e consulta de números de cartão completo, com autenticação JWT, logs via Serilog e criptografia de dados sensíveis.
 
---
-# Descrição do projeto
+---
+## Descrição do projeto
 O Card Registry API é uma API simples, mas segura. Ela permite:
 
 Cadastro de usuários com senha segura (hash PBKDF2 + SHA256).
