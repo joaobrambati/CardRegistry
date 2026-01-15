@@ -85,3 +85,5 @@ Testes unitários foram feitos usando Xunit.
 * A segurança foi priorizada: senhas e cartões são hasheados antes de armazenar no banco.
 
 * O JWT expira após 60 minutos e precisa ser enviado nos headers para qualquer operação de cartão.
+
+* Usei mapeamento manual entre entidades e DTOs por ser mais rápido e performático.
