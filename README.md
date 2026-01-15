@@ -65,6 +65,7 @@ POST /api/cartao/cadastraArquivo → Cadastra cartões a partir de um arquivo TX
 * No Console do Gerenciador de Pacote, rode o comando (Update-Database)
 * Rode a API
 * Acesse o Swagger
+* Quando for testar a API, não precisa por a palavra "Bearer" no Swagger, basta apenas colar o token
   
 ---
 ## Logs
