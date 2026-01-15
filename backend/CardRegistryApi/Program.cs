@@ -18,15 +18,12 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-// Add services to the container
 builder.Services.AddControllers();
 
-// DbContext SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-// Authentication - JWT Bearer
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,15 +50,11 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Authorization
 builder.Services.AddAuthorization();
 
-// Application & Infrastructure DI
 builder.Services.AddApplicationDI();
 builder.Services.AddInfrastructureDI();
 
-
-// Swagger + Bearer JWT
 builder.Services.AddOpenApi("v1", options =>
 {
     options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
@@ -69,7 +62,6 @@ builder.Services.AddOpenApi("v1", options =>
 
 var app = builder.Build();
 
-// Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -79,19 +71,15 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// HTTPS
 app.UseHttpsRedirection();
 
-// Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Map Controllers
 app.MapControllers();
 
 app.Run();
 
-// ===== Classe para configurar Bearer no Swagger =====
 internal sealed class BearerSecuritySchemeTransformer(
     Microsoft.AspNetCore.Authentication.IAuthenticationSchemeProvider authenticationSchemeProvider
 ) : IOpenApiDocumentTransformer
