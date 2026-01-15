@@ -51,24 +51,24 @@ GET /api/cartao/obterPorNumero/{cardNumber} → Consulta um cartão pelo número
 POST /api/cartao/cadastraManual → Cadastra um cartão manualmente
 POST /api/cartao/cadastraArquivo → Cadastra cartões a partir de um arquivo TXT
 
---
+---
 # Como rodar o projeto
 
---
-# Logs
+---
+## Logs
 
 Todas as requisições e retornos são logados pelo Serilog.
 Logs padrão vão para o console e para o arquivo na pastas "logs"
 
---
-# Testes
+---
+## Testes
 Testes unitários foram feitos usando Xunit.
 
---
-$ Observações
+---
+## Observações
 
-A API não permite salvar cartões duplicados (verificação pelo hash completo).
+* A API não permite salvar cartões duplicados (verificação pelo hash completo).
 
-A segurança foi priorizada: senhas e cartões são hasheados antes de armazenar no banco.
+* A segurança foi priorizada: senhas e cartões são hasheados antes de armazenar no banco.
 
-O JWT expira após 60 minutos e precisa ser enviado nos headers para qualquer operação de cartão.
+* O JWT expira após 60 minutos e precisa ser enviado nos headers para qualquer operação de cartão.
