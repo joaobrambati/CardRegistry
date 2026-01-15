@@ -1,6 +1,8 @@
 ## Card Registry API
 Uma API para cadastro e consulta de números de cartão completo, com autenticação JWT, logs via Serilog e criptografia de dados sensíveis.
 
+Quando for testar a API, não precisa por a palavra "Bearer" no Swagger, basta apenas colar o token
+
 ---
 ## Descrição do projeto
 O Card Registry API é uma API simples, mas segura. Ela permite:
