@@ -47,7 +47,7 @@ POST /api/auth/register → Cadastro de usuário
 
 POST /api/auth/login → Login e geração de token JWT
 
-
+--
 
 Cartao (Todos os endpoints abaixo exigem autenticação JWT no header)
 
