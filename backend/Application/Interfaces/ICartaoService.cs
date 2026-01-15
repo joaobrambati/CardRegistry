@@ -7,6 +7,6 @@ namespace Application.Interfaces;
 public interface ICartaoService
 {
     Task<Response<ConsultarCartaoDto>> GetByCardNumber(string cardNumber);
-    Task<Response<CartaoDto>> Create(NumCartaoDto dto, Guid usuarioId);
-    Task<Response<List<CartaoDto>>> CreateFromFile(IFormFile arquivo, Guid usuarioId);
+    Task<Response<CartaoDto>> Create(NumCartaoDto dto);
+    Task<Response<List<CartaoDto>>> CreateFromFile(IFormFile arquivo);
 }

@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Cartao;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace CardRegistryApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class CartaoController : ControllerBase
 {
     private readonly ICartaoService _service;
@@ -38,8 +40,7 @@ public class CartaoController : ControllerBase
     [HttpPost("cadastraManual")]
     public async Task<IActionResult> Create([FromBody] NumCartaoDto dto)
     {
-        //var usuarioId = ObterUsuarioIdDoToken();
-        var response = await _service.Create(dto, Guid.NewGuid());
+        var response = await _service.Create(dto);
 
         if (!response.Status)
             return BadRequest(response);
@@ -58,21 +59,12 @@ public class CartaoController : ControllerBase
         if (dto.Arquivo is null || dto.Arquivo.Length == 0)
             return BadRequest("Arquivo não informado.");
 
-        //var usuarioId = ObterUsuarioIdDoToken();
-
-        var response = await _service.CreateFromFile(dto.Arquivo, Guid.NewGuid());
+        var response = await _service.CreateFromFile(dto.Arquivo);
 
         if (!response.Status)
             return BadRequest(response);
 
         return Ok(response);
-    }
-
-    private Guid ObterUsuarioIdDoToken()
-    {
-        var userIdClaim = User.FindFirst("sub") ?? User.FindFirst("id");
-
-        return Guid.Parse(userIdClaim!.Value);
     }
 
 }

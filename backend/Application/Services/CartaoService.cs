@@ -45,7 +45,7 @@ public class CartaoService : ICartaoService
         }
     }
 
-    public async Task<Response<CartaoDto>> Create(NumCartaoDto dto, Guid usuarioId)
+    public async Task<Response<CartaoDto>> Create(NumCartaoDto dto)
     {
         try
         {
@@ -63,7 +63,6 @@ public class CartaoService : ICartaoService
                 UltimosQuatroDigitos = numCartao.Length >= 4 ? numCartao[^4..] : numCartao,
                 OrigemCadastro = "Manual",
                 CriadoEm = DateTime.Now,
-                UsuarioId = usuarioId
             };
 
             await _repository.Create(cartao);
@@ -80,7 +79,6 @@ public class CartaoService : ICartaoService
                 DataLote = cartao.DataLote,
                 OrigemCadastro = cartao.OrigemCadastro,
                 CriadoEm = cartao.CriadoEm,
-                UsuarioId = cartao.UsuarioId
             };
 
             return new Response<CartaoDto> { Data = cartaoDto, Status = true, Mensagem = "Cartão cadastrado com sucesso." };
@@ -92,7 +90,7 @@ public class CartaoService : ICartaoService
         }
     }
 
-    public async Task<Response<List<CartaoDto>>> CreateFromFile(IFormFile arquivo, Guid usuarioId)
+    public async Task<Response<List<CartaoDto>>> CreateFromFile(IFormFile arquivo)
     {
         var cartoesCriados = new List<CartaoDto>();
 
@@ -150,7 +148,6 @@ public class CartaoService : ICartaoService
                     DataLote = dataLote,
                     OrigemCadastro = "Arquivo",
                     CriadoEm = DateTime.Now,
-                    UsuarioId = usuarioId
                 };
 
                 await _repository.Create(cartao);
@@ -167,7 +164,6 @@ public class CartaoService : ICartaoService
                     DataLote = cartao.DataLote,
                     OrigemCadastro = cartao.OrigemCadastro,
                     CriadoEm = cartao.CriadoEm,
-                    UsuarioId = cartao.UsuarioId
                 });
             }
 
