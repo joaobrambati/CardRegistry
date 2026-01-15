@@ -60,6 +60,10 @@ POST /api/cartao/cadastraArquivo → Cadastra cartões a partir de um arquivo TX
 ---
 # Como rodar o projeto
 
+* Clone o repositório
+* Suba o SQL Server via Docker (docker-compose up -d)
+* No Console do Gerenciador de Pacote, rode o comando (Update-Database)
+  
 ---
 ## Logs
 
