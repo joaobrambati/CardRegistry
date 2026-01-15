@@ -63,11 +63,14 @@ POST /api/cartao/cadastraArquivo → Cadastra cartões a partir de um arquivo TX
 * Clone o repositório
 * Suba o SQL Server via Docker (docker-compose up -d)
 * No Console do Gerenciador de Pacote, rode o comando (Update-Database)
+* Rode a API
+* Acesse o Swagger
   
 ---
 ## Logs
 
 Todas as requisições e retornos são logados pelo Serilog.
+
 Logs padrão vão para o console e para o arquivo na pastas "logs"
 
 ---
